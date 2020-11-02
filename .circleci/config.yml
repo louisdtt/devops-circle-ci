@@ -1,6 +1,6 @@
 version: 2.1
 jobs:
-  install: &shared_docker
+  build: &shared_docker
     docker:  
       - image: cimg/node:14.10.1 # the primary container, where your job's commands are run
         auth:
