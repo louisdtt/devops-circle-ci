@@ -1,7 +1,7 @@
 version: 2.1
 jobs:
-  install:
-    docker: 
+  install: &shared_docker
+    docker:  
       - image: cimg/node:14.10.1 # the primary container, where your job's commands are run
         auth:
           username: mydockerhub-user
@@ -13,6 +13,6 @@ jobs:
          keys :
           - npm-v1-dependencies-{{ checksum "yarn.lock" }}
   lint:
-    steps:
-      - run: yarn lint && yarn format:check
-    
+   <<: *shared_docker
+   steps:
+    - run: yarn lint && yarn format:check
