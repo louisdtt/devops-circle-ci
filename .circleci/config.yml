@@ -1,6 +1,6 @@
 version: 2.1
 jobs:
-  build:
+  install:
     docker: 
       - image: cimg/node:14.10.1 # the primary container, where your job's commands are run
         auth:
@@ -12,4 +12,7 @@ jobs:
       - restore_cache : 
          keys :
           - npm-v1-dependencies-{{ checksum "yarn.lock" }}
+  lint:
+    steps:
+      - run: yarn lint && yarn format:check
     
