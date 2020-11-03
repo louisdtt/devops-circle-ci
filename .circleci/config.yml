@@ -35,6 +35,25 @@ jobs:
 
     - run: yarn test:ci
     
+  e2etest:
+        docker: *shared_docker
+        environment:
+          POSTGRES_USER: user_e2e
+          POSTGRES_DB: db
+          POSTGRES_PASSWORD: password
+        steps:
+            - checkout
+            - restore_cache:
+                key: yarn-packages-v2{{ checksum "yarn.lock" }}
+            - run: 
+                command: yarn test:e2e
+                environment: 
+                    DATABASE_URL: postgres://user_e2e:password@localhost:5432/db
+                    API_PORT: 3000
+                    API_HOST: localhost
+                    API_PROTOCOL: http
+                    JWT_SECRET: secret
+
 workflows:
   version: 2
   build_test:
@@ -42,3 +61,4 @@ workflows:
       - build
       - lint
       - test
+      - e2etest
