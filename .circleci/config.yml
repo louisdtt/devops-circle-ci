@@ -12,12 +12,15 @@ jobs:
       - restore_cache : 
          keys :
           - npm-v1-dependencies-{{ checksum "yarn.lock" }}
+      - save_cache:
+          paths:
+            - ./node_modules
+          key: npm-v1-dependencies-{{ checksum "yarn.lock" }}
           
   lint:
    docker: *shared_docker
    steps:
-    - checkout # check out the code in the project directory
-    - run: yarn global add node-gyp && yarn install
+    - checkout # check out the code in the project director
     - restore_cache : 
        keys :
         - npm-v1-dependencies-{{ checksum "yarn.lock" }}
@@ -27,8 +30,7 @@ jobs:
   test:
    docker: *shared_docker
    steps:
-    - checkout # check out the code in the project directory
-    - run: yarn global add node-gyp && yarn install
+    - checkout # check out the code in the project director
     - restore_cache : 
        keys :
         - npm-v1-dependencies-{{ checksum "yarn.lock" }}
@@ -51,7 +53,6 @@ jobs:
           POSTGRES_PASSWORD: password
     steps:
       - checkout
-      - run: yarn global add node-gyp && yarn install
       - restore_cache:
           keys:
             - npm-v1-dependencies-{{ checksum "yarn.lock" }}
@@ -63,6 +64,12 @@ workflows:
   build_test:
     jobs :
       - build
-      - lint
-      - test
-      - e2etest
+      - lint:
+          requires:
+            - build
+      - test:
+          requires:
+            - build      
+      - e2etest:
+          requires:
+            - build 
