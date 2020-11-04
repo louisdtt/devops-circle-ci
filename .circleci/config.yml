@@ -70,7 +70,7 @@ jobs:
     - run: yarn doc:build
 
     - store_artifacts:
-          path: /dock-server
+          path: doc-server
           destination: artifact-file
 
 workflows:
