@@ -59,6 +59,16 @@ jobs:
       
       - run: yarn test:e2e
 
+  documentation:
+   docker: *shared_docker
+   steps:
+    - checkout # check out the code in the project director
+    - restore_cache : 
+       keys :
+        - npm-v1-dependencies-{{ checksum "yarn.lock" }}
+
+    - run: yarn doc:build
+
 workflows:
   version: 2
   build_test:
@@ -73,3 +83,6 @@ workflows:
       - e2etest:
           requires:
             - build 
+      - documentation:
+          requires:
+            - build
